@@ -28,6 +28,7 @@ class Announcement(models.Model):
         (TEACH,"Могу научить"),
     ]
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, related_name="announcements", null=True, blank=True)
+    owner = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='announcements', null=True, blank=True)
     title = models.CharField(max_length=155)
     type = models.CharField(max_length=100,choices=TYPE_OF_ADS, default=LEARN)
     description = models.TextField(verbose_name="description")
