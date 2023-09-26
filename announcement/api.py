@@ -10,9 +10,7 @@ from .pagination import AnnouncementPagination
 
 from .models import Announcement, Category, Subcategory
 from .serializers import (
-    AnnouncementListSerializer,
-    AnnouncementCreateSerializer,
-    AnnouncementRetrieveSerializer,
+    AnnouncementDetailSerializer,
     AnnouncementSerializer,
     CategorySerializer,
     SubcategorySerializer
@@ -31,18 +29,22 @@ class SubcategoryViewSet(ModelViewSet):
 
 
 class AnnouncementViewSet(ModelViewSet):
-    queryset = Announcement.objects.filter(price__gt=2000)
+    queryset = Announcement.objects.all()
     permission_classes = [IsOwnerOrReadOnly]
     pagination_class = AnnouncementPagination
     serializer_class = AnnouncementSerializer
     filter_backends = [SearchFilter]
     search_fields = ['title', 'description']
-
-    # sudo service rabbitmq-server start
-    # sudo service rabbitmq-server status
     
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return AnnouncementDetailSerializer
+        elif self.action == 'list':
+            return AnnouncementSerializer
+        else:
+            return AnnouncementSerializer
 
-
+    
 # class MentorView(APIView):
 #     def get(self, request, *args, **kwargs):
 #         ads = Announcement.objects.all()
